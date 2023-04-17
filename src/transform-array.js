@@ -14,7 +14,7 @@ const { NotImplementedError } = require('../extensions/index.js');
  * 
  */
 
-function transform(arr) {
+/* function transform(arr) {
   if(!Array.isArray(arr)) {
     throw new Error ("'arr' parameter must be an instance of the Array!");
   } else {
@@ -31,6 +31,30 @@ function transform(arr) {
       }
       if(cpArr[i] == '--double-next' && cpArr.indexOf('--double-next') !== cpArr.length - 1) {
         cpArr.splice(i, 1, cpArr[i + 1]);
+      }
+    }
+    return cpArr;
+  }
+} */
+
+function transform(arr) {
+  if(!Array.isArray(arr)) {
+    throw new Error ("'arr' parameter must be an instance of the Array!");
+  } else {
+    let cpArr = arr.slice();
+    for (let i = 0; i < cpArr.length; i++){
+      if(cpArr[i] == '--discard-prev') {
+        cpArr[i - 1] !== undefined ? cpArr.splice(i - 1, 2) : cpArr.splice(i, 1);
+      }
+      if(cpArr[i] == '--discard-next' /*&& cpArr.indexOf('--discard-next') !== cpArr.length - 1*/) {
+        (cpArr[i + 2] == '--discard-prev' || cpArr[i + 2] == '--double-prev') ? cpArr.splice(i, 3) : 
+        cpArr.splice(i, 2)  ;
+      }
+      if(cpArr[i] == '--double-prev') {
+        cpArr[i - 1] !== undefined ? cpArr.splice(i, 1, cpArr[i - 1]) : cpArr.splice(i, 1);
+      }
+      if(cpArr[i] == '--double-next' /*&& cpArr.indexOf('--double-next') !== cpArr.length - 1*/) {
+        cpArr[i + 1] !== undefined ? cpArr.splice(i, 1, cpArr[i + 1]) : cpArr.splice(i, 1);
       }
     }
     return cpArr;
