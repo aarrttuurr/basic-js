@@ -13,17 +13,29 @@ const { NotImplementedError } = require('../extensions/index.js');
  * transform([1, 2, 3, '--discard-prev', 4, 5]) => [1, 2, 4, 5]
  * 
  */
-function transform(arr) {
-  return 
-}
 
 function transform(arr) {
-  return arr.filter((item, i, ar) => ar[i + 1] !== '--discard-prev' && (ar[i] !== '--discard-prev' /*&& ar.indexOf('--discard-prev') === 0*/));
+  if(!Array.isArray(arr)) {
+    throw new Error ("'arr' parameter must be an instance of the Array!");
+  } else {
+    let cpArr = arr.slice();
+    for (let i = 0; i < cpArr.length; i++){
+      if(cpArr[i + 1] == '--discard-prev') {
+        cpArr.splice(i, 2);
+      }
+      if(cpArr[i] == '--discard-next' && cpArr.indexOf('--discard-next') !== cpArr.length - 1) {
+        cpArr.splice(i, 2);
+      }
+      if(cpArr[i + 1] == '--double-prev') {
+        cpArr.splice(i + 1, 1, cpArr[i]);
+      }
+      if(cpArr[i] == '--double-next' && cpArr.indexOf('--double-next') !== cpArr.length - 1) {
+        cpArr.splice(i, 1, cpArr[i + 1]);
+      }
+    }
+    return cpArr;
+  }
 }
-
-console.log(transform([1, 2, 3, '--discard-prev', 4, 5]))
-
-console.log(transform(['--discard-prev', 1, 2, 3, 4, 5]))
 
 module.exports = {
   transform
